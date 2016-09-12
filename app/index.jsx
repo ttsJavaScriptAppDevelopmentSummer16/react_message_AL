@@ -23,21 +23,30 @@ class HelloMessage extends React.Component {
     }
   }
 
-  _updateNewItem = (event) => {
+  _updateNewItem(event){
     this.setState({newItem: event.target.value})
   }
-  
+
+  _addTodo(event){
+    event.preventDefault()
+    let messages = this.state.messages.slice()
+    messages.push({text: this.state.newItem, user: currentUser, time:Date()})
+    this.setState({messages})
+    this.setState({newItem: ''})
+  }
+
   render() {
       var mess = this.state.messages.map(function(message, i){
       if (currentUser === message.user)
-          return (<li style={currentUserStyle} key={i} className="message">{message.text}, created by:{message.user}@{message.time}</li>);
+          return (<li style={currentUserStyle} key={i} className="message">{message.text},
+                  created by:{message.user}@{message.time}<br></br><button type="submit">Edit Message</button></li>);
             else return(<li key={i} className="message">{message.text}, created by:{message.user}@{message.time}</li>)
       });
 //
 return (
   <div>
-    <form onSubmit={this._addTodo}>
-      <input value={this.state.newItem} onChange={this._updateNewItem} />
+    <form onSubmit={this._addTodo.bind(this)}>
+      <input value={this.state.newItem} onChange={this._updateNewItem.bind(this)} required/>
       <button type="submit">Send Message</button>
     </form>
     <ul>{mess}</ul>
